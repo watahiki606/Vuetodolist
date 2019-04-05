@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Vue.js App</title>
+    <link href="main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- ここにテンプレートを書いていく -->
+      <label v-for="label in options">
+        <!-- v-modelディレクティブでラジオボタンの選択値とcurrentデータを同期させる。ラジオボタンが変更されるとその要素のlabel.valueがcurrentプロパティへ代入される。 -->
+        <input type="radio" v-model="current" v-bind:value="label.value" />
+        {{ label.label }}
+      </label>
+      （{{ computedTodos.length }} 件を表示）
+      <table>
+        <thead>
+          <tr>
+            <th class="id">ID</th>
+            <th class="comment">コメント</th>
+            <th class="state">状態</th>
+            <th class="button">-</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- todoの要素を一行づつ繰り返し表示。[v-forディレクティブ] -->
+          <tr v-for="(item) in computedTodos" :key="item.id">
+            <!-- trの内側ではtodosデータの各要素のプロパティが使用できるようになる。 -->
+            <th>{{ item.id }}</th>
+            <td>{{ item.comment }}</td>
+            <td class="state">
+              <!-- 状態変更ボタン -->
+              <button v-on:click="doChangeState(item)">
+                {{ labels[item.state] }}
+              </button>
+            </td>
+            <td class="button">
+              <!-- 削除ボタンのモック [コントロールキーを押しながらクリックしないと呼ばれない]-->
+              <button v-on:click.ctrl="doRemove(item)">削除</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p>※削除ボタンはコントロールキーを押しながらクリックして下さい</p>
+      <h2>新しい作業の追加</h2>
+      <!-- コメント入力フォーム -->
+      <form class="add-form" v-on:submit.prevent="doAdd">
+        <!-- v-onディレクティブによって、ボタンをクリックしたりフォームでエンターを押してsubmitが行われると、それをハンドリングしてdoAddメソッドが呼ばれる。 -->
+        コメント
+        <!-- ref属性を使って参照するための名前をタグにつけておくとそのDOMに直接アクセスできる。
+        ref属性で名前をつけたタグは、メソッド内から使用できる。[例：this.$refs.名前] 
+        input要素にcommentという名前をつけた
+        v-modelディレクティブを使えばデータとフォームの入力を動悸することもできる。-->
+        <input type="text" ref="comment" />
+        <!-- 追加ボタンのモック -->
+        <button type="submit">追加</button>
+      </form>
+      <!-- 絞り込みラジオボタン -->
+      <!-- TODOテーブル -->
+      <!-- 新規登録フォーム -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
